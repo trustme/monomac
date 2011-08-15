@@ -78,6 +78,21 @@
         <remarks>To be added.</remarks>
       </Docs>
     </Member>
+    <Member MemberName="CFNetworkLibrary">
+      <MemberSignature Language="C#" Value="public const string CFNetworkLibrary;" />
+      <MemberSignature Language="ILAsm" Value=".field public static literal string CFNetworkLibrary" />
+      <MemberType>Field</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
     <Member MemberName="CoreAnimationLibrary">
       <MemberSignature Language="C#" Value="public const string CoreAnimationLibrary;" />
       <MemberSignature Language="ILAsm" Value=".field public static literal string CoreAnimationLibrary" />
@@ -96,6 +111,21 @@
     <Member MemberName="CoreAudioLibrary">
       <MemberSignature Language="C#" Value="public const string CoreAudioLibrary;" />
       <MemberSignature Language="ILAsm" Value=".field public static literal string CoreAudioLibrary" />
+      <MemberType>Field</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="CoreDataLibrary">
+      <MemberSignature Language="C#" Value="public const string CoreDataLibrary;" />
+      <MemberSignature Language="ILAsm" Value=".field public static literal string CoreDataLibrary" />
       <MemberType>Field</MemberType>
       <AssemblyInfo>
         <AssemblyVersion>0.0.0.0</AssemblyVersion>
@@ -138,6 +168,21 @@
         <summary>The full path to the CoreGraphics library.</summary>
         <remarks>
         </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="CoreImageLibrary">
+      <MemberSignature Language="C#" Value="public const string CoreImageLibrary;" />
+      <MemberSignature Language="ILAsm" Value=".field public static literal string CoreImageLibrary" />
+      <MemberType>Field</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
       </Docs>
     </Member>
     <Member MemberName="CoreLocationLibrary">
@@ -354,6 +399,21 @@
         <summary>The full path to the OpenGLES library.</summary>
         <remarks>
         </remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ScriptingBridgeLibrary">
+      <MemberSignature Language="C#" Value="public const string ScriptingBridgeLibrary;" />
+      <MemberSignature Language="ILAsm" Value=".field public static literal string ScriptingBridgeLibrary" />
+      <MemberType>Field</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
       </Docs>
     </Member>
     <Member MemberName="SecurityLibrary">

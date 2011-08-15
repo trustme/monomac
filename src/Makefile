@@ -11,7 +11,6 @@ WARNINGS_I_SHOULD_FIX=114,108
 CORE_SOURCES =					\
 	Constants.cs					\
 	./AppKit/Enums.cs				\
-	./CoreImage/Enums.cs				\
 	./Foundation/EnumDesktop.cs			\
 	./Foundation/NSObject.cs			\
 	./ImageKit/Enums.cs				\
@@ -32,6 +31,7 @@ CORE_SOURCES =					\
 	./OpenGL/CGLEnums.cs				\
 	./OpenGL/CGLContext.cs				\
 	./OpenGL/CGLPixelFormat.cs			\
+	./ScriptingBridge/Enums.cs			\
 	./WebKit/Enums.cs
 
 # Sources that are not part of CORE_SOURCES or the generated templates
@@ -64,9 +64,6 @@ MONOMAC_SOURCES = \
 	./AppKit/NSSegmentedControl.cs			\
 	./AppKit/NSTableView.cs				\
 	./AppKit/NSWindow.cs				\
-	./CoreImage/CIContext.cs			\
-	./CoreImage/CISampler.cs			\
-	./CoreImage/CIVector.cs				\
 	./CoreVideo/CVDisplayLink.cs			\
 	./Growl/Constants.cs				\
 	./QTKit/QTCaptureDevice.cs			\
@@ -124,6 +121,7 @@ SHARED_API = \
 	./foundation.cs		\
 	./coreanimation.cs	\
 	./coredata.cs		\
+	./coreimage.cs		\
 	./corelocation.cs
 
 SHARED_SOURCES = $(patsubst %,../../maccore/src/%,$(SHARED_SOURCE))
@@ -132,7 +130,6 @@ SHARED_APIS = $(patsubst %,../../maccore/src/%,$(SHARED_API))
 
 APIS = \
 	appkit.cs		\
-	coreimage.cs		\
 	corewlan.cs		\
 	foundation-desktop.cs 	\
 	growl.cs		\
@@ -141,12 +138,13 @@ APIS = \
 	pdfkit.cs		\
 	webkit.cs		\
 	composer.cs		\
+	scriptingbridge.cs		\
 	$(SHARED_APIS)
 
 all: $(TARGETS)
 
-parse.exe: parse.cs
-	gmcs parse.cs
+parse.exe: parse.cs ../../maccore/src/Options.cs
+	gmcs parse.cs ../../maccore/src/Options.cs
 
 core.dll: $(CORE_SOURCES) $(SHARED_CORE_SOURCES) Makefile
 	gmcs -target:library -debug -unsafe -out:core.dll -define:MONOMAC,MONOMAC_BOOTSTRAP,COREBUILD $(CORE_SOURCES) $(SHARED_CORE_SOURCES) -r:System.Drawing

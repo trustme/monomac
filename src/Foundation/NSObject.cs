@@ -154,7 +154,7 @@ namespace MonoMac.Foundation {
 		[Export ("release")]
 		internal void NativeRelease () {
 			lock (lock_obj) {
-				uint count = Messaging.uint_objc_msgSend (handle, selRetainCount);
+				uint count = Messaging.UInt32_objc_msgSend (handle, selRetainCount);
 				Messaging.void_objc_msgSendSuper (SuperHandle, selRelease);
 
 				if (count == 2) {
@@ -172,7 +172,7 @@ namespace MonoMac.Foundation {
 		[Export ("retain")]
 		internal IntPtr NativeRetain () {
 			lock (lock_obj) {
-				uint count = Messaging.uint_objc_msgSend (handle, selRetainCount);
+				uint count = Messaging.UInt32_objc_msgSend (handle, selRetainCount);
 				Messaging.void_objc_msgSendSuper (SuperHandle, selRetain);
 
 				if (count == 1) {
@@ -224,13 +224,9 @@ namespace MonoMac.Foundation {
 		}
 
 		private IntPtr GetObjCIvar (string name) {
-			IntPtr buf;
-			IntPtr native;
+			IntPtr native = IntPtr.Zero;
 			
-			buf = Marshal.AllocHGlobal (Marshal.SizeOf (typeof (IntPtr)));
-			object_getInstanceVariable (handle, name, buf);
-			native = Marshal.ReadIntPtr (buf);
-			Marshal.FreeHGlobal (buf);
+			object_getInstanceVariable (handle, name, ref native);
 	
 			return native;
 		}
@@ -268,7 +264,7 @@ namespace MonoMac.Foundation {
 		}
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
-		extern static void object_getInstanceVariable (IntPtr obj, string name, IntPtr val);
+		extern static void object_getInstanceVariable (IntPtr obj, string name, ref IntPtr val);
 		[DllImport ("/usr/lib/libobjc.dylib")]
 		extern static void object_setInstanceVariable (IntPtr obj, string name, IntPtr val);
 
@@ -289,7 +285,7 @@ namespace MonoMac.Foundation {
 
 		private void InvokeOnMainThread (Selector sel, NSObject obj, bool wait)
 		{
-			Messaging.void_objc_msgSend_intptr_intptr_bool (this.Handle, selPerformSelectorOnMainThreadWithObjectWaitUntilDone, sel.Handle, obj.Handle, wait);
+			Messaging.void_objc_msgSend_intptr_intptr_bool (this.Handle, selPerformSelectorOnMainThreadWithObjectWaitUntilDone, sel.Handle, obj == null ? IntPtr.Zero : obj.Handle, wait);
 		}
 
 		public void BeginInvokeOnMainThread (Selector sel, NSObject obj)
