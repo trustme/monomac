@@ -1,5 +1,6 @@
 //
-// Copyright 2010, Novell, Inc.
+// Copyright 2010, 2011 Novell, Inc.
+// Copyright 2011, Xamarin, Inc.
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -52,7 +53,10 @@ namespace MonoMac.AppKit {
 		DisableForceQuit           = (1 <<  6),
 		DisableSessionTermination  = (1 <<  7),
 		DisableHideApplication     = (1 <<  8),
-		DisableMenuBarTransparency = (1 <<  9) 
+		DisableMenuBarTransparency = (1 <<  9),
+
+		FullScreen                 = (1 << 10),
+		AutoHideToolbar            = (1 << 11)
 	}
 
 	public enum NSApplicationDelegateReply {
@@ -630,7 +634,9 @@ namespace MonoMac.AppKit {
 		Transient = 1 << 3,
 		Stationary = 1 << 4,
 		ParticipatesInCycle = 1 << 5,
-		IgnoresCycle = 1 << 6
+		IgnoresCycle = 1 << 6,
+		FullScreenPrimary = 1 << 7,
+		FullScreenAuxiliary = 1 << 8
 	}
 
 	public enum NSWindowNumberListOptions {
@@ -723,7 +729,8 @@ namespace MonoMac.AppKit {
 		TexturedRounded,
 		RoundRect,
 		Recessed,
-		RoundedDisclosure
+		RoundedDisclosure,
+		Inline
 	}
 
 	public enum NSGradientType {
@@ -815,7 +822,10 @@ namespace MonoMac.AppKit {
 	}
 
 	public enum NSSaveOperationType  {
-		Save, SaveAs, SaveTo, Autosave
+		Save, SaveAs, SaveTo,
+		Autosave = 3,	/* Deprecated name in Lion */
+		Elsewhere = 3,	/* New Lion name */
+		InPlace = 4	/* New in Lion */
 	}
 
 #endregion
@@ -1504,4 +1514,34 @@ namespace MonoMac.AppKit {
 		Specific_10_4 = 4,
 			
 	}
+
+	[Flags]
+	public enum NSRemoteNotificationType {
+		None = 0,
+		Badge = 1
+	}
+	
+	public enum NSScrollViewFindBarPosition {
+		AboveHorizontalRuler = 0,
+		AboveContent,
+		BelowContent
+	}
+	
+	public enum NSScrollerStyle {
+   		Legacy = 0,
+		Overlay
+	}
+	
+	public enum  NSScrollElasticity {
+		Automatic = 0,
+   		None,
+		Allowed
+	}
+	
+	public enum  NSScrollerKnobStyle {
+		Default  = 0,
+		Dark     = 1,
+		Light    = 2
+	}
+   
 } 

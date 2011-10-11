@@ -1,7 +1,9 @@
 ///
-// Copyright 2010, Novell, Inc.
+// Copyright 2011, Xamarin, Inc.
+// Copyright 2010, 2011, Novell, Inc.
 // Copyright 2010, Kenneth Pouncey
 // Coprightt 2010, James Clancey
+// Copyright 2011, Curtis Wensley
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -175,6 +177,16 @@ namespace MonoMac.AppKit {
 		//Detected properties
 		[Export ("duration")]
 		double Duration { get; set; }
+
+		[Lion, Export ("completionHandler")]
+		NSAction CompletionHandler { get; set; }
+
+		[Static]
+		[Lion, Export ("runAnimationGroup:completionHandler:")]
+		void RunAnimation (NSAnimationContext context, NSAction completionHandler);
+    
+		[Lion, Export ("timingFunction")]
+		CAMediaTimingFunction TimingFunction { get; set; }		
 	}
 	
 	[BaseType (typeof (NSObject), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSAlertDelegate)})]
@@ -218,7 +230,7 @@ namespace MonoMac.AppKit {
 		[Export ("suppressionButton")]
 		NSButton SuppressionButton { get; } 
 	
-		[Export ("accessoryView")]
+		[Export ("accessoryView"), NullAllowed]
 		NSView AccessoryView { get; set; } 
 	
 		[Export ("layout")]
@@ -243,7 +255,7 @@ namespace MonoMac.AppKit {
 	}
 
 	[BaseType (typeof (NSResponder), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSApplicationDelegate) })]
-	public interface NSApplication {
+	public interface NSApplication : NSWindowRestoration {
 		[Export ("sharedApplication"), Static]
 		NSApplication SharedApplication { get; }
 	
@@ -467,6 +479,78 @@ namespace MonoMac.AppKit {
 		// From NSColorPanel
 		[Export ("orderFrontColorPanel:")]
 		void OrderFrontColorPanel (NSObject sender);
+
+		[Lion, Export ("disableRelaunchOnLogin")]
+		void DisableRelaunchOnLogin ();
+
+		[Lion, Export ("enableRelaunchOnLogin")]
+		void EnableRelaunchOnLogin ();
+
+		[Lion, Export ("enabledRemoteNotificationTypes")]
+		NSRemoteNotificationType EnabledRemoteNotificationTypes ();
+
+		[Lion, Export ("registerForRemoteNotificationTypes")]
+		void RegisterForRemoteNotificationTypes (NSRemoteNotificationType types);
+
+		[Lion, Export ("unregisterForRemoteNotifications")]
+		void UnregisterForRemoteNotifications ();
+
+		[Field ("NSApplicationDidBecomeActiveNotification")]
+		NSString DidBecomeActiveNotification { get; }
+
+		[Field ("NSApplicationDidHideNotification")]
+		NSString DidHideNotification { get; }
+
+		[Field ("NSApplicationDidFinishLaunchingNotification")]
+		NSString DidFinishLaunchingNotification { get; }
+
+		[Field ("NSApplicationDidResignActiveNotification")]
+		NSString DidResignActiveNotification { get; }
+
+		[Field ("NSApplicationDidUnhideNotification")]
+		NSString DidUnhideNotification { get; }
+
+		[Field ("NSApplicationDidUpdateNotification")]
+		NSString DidUpdateNotification { get; }
+
+		[Field ("NSApplicationWillBecomeActiveNotification")]
+		NSString WillBecomeActiveNotification { get; }
+
+		[Field ("NSApplicationWillHideNotification")]
+		NSString WillHideNotification { get; }
+
+		[Field ("NSApplicationWillFinishLaunchingNotification")]
+		NSString WillFinishLaunchingNotification { get; }
+
+		[Field ("NSApplicationWillResignActiveNotification")]
+		NSString WillResignActiveNotification { get; }
+
+		[Field ("NSApplicationWillUnhideNotification")]
+		NSString WillUnhideNotification { get; }
+
+		[Field ("NSApplicationWillUpdateNotification")]
+		NSString WillUpdateNotification { get; }
+
+		[Field ("NSApplicationWillTerminateNotification")]
+		NSString WillTerminateNotification { get; }
+
+		[Field ("NSApplicationDidChangeScreenParametersNotification")]
+		NSString DidChangeScreenParametersNotification { get; }
+
+		[Lion, Field ("NSApplicationLaunchRemoteNotificationKe")]
+		NSString LaunchRemoteNotificationKe { get; }
+
+		[Lion, Field ("NSApplicationLaunchIsDefaultLaunchKe")]
+		NSString LaunchIsDefaultLaunchKe { get; }
+
+		[Lion, Field ("NSApplicationLaunchIsDefaultLaunchKey")]
+		NSString LaunchIsDefaultLaunchKey  { get; }
+
+		[Lion, Field ("NSApplicationLaunchRemoteNotificationKey")]
+		NSString LaunchRemoteNotificationKey { get; }
+
+		[Field ("NSApplicationDidFinishRestoringWindowsNotification")]
+		NSString DidFinishRestoringWindowsNotification { get; }
 	}
 	
 	[BaseType (typeof (NSObject))]
@@ -567,9 +651,22 @@ namespace MonoMac.AppKit {
 	
 		[Export ("orderFrontStandardAboutPanelWithOptions:"), EventArgs ("NSDictionary")]
 		void OrderFrontStandardAboutPanelWithOptions (NSDictionary optionsDictionary);
+
+		[Lion, Export ("application:didRegisterForRemoteNotificationsWithDeviceToken:"), EventArgs ("NSData")]
+		void RegisteredForRemoteNotifications (NSApplication application, NSData deviceToken);
+
+		[Lion, Export ("application:didFailToRegisterForRemoteNotificationsWithError:"), EventArgs ("NSError")]
+		void FailedToRegisterForRemoteNotifications (NSApplication application, NSError error);
+
+		[Lion, Export ("application:didReceiveRemoteNotification:"), EventArgs ("NSDictionary")]
+		void ReceivedRemoteNotification (NSApplication application, NSDictionary userInfo);
+
+		[Lion, Export ("application:willEncodeRestorableState:"), EventArgs ("NSCoder")]
+		void WillEncodeRestorableState (NSApplication app, NSCoder encoder);
+
+		[Lion, Export ("application:didDecodeRestorableState:"), EventArgs ("NSCoder")]
+		void DecodedRestorableState (NSApplication app, NSCoder state);
 	}
-
-
 	
 	[BaseType (typeof (NSObjectController))]
 	public interface NSArrayController {
@@ -1755,7 +1852,7 @@ namespace MonoMac.AppKit {
 		[Export ("formatter")]
 		NSFormatter Formatter { get; set; }
 	
-		[Export ("objectValue")]
+		[Export ("objectValue"), NullAllowed]
 		NSObject ObjectValue { get; set; }
 	
 		[Export ("hasValidObjectValue")]
@@ -1983,6 +2080,14 @@ namespace MonoMac.AppKit {
 		[Export ("interiorBackgroundStyle")]
 		NSBackgroundStyle InteriorBackgroundStyle { get; }
 	
+		[Lion, Export ("draggingImageComponentsWithFrame:inView:")]
+		NSDraggingImageComponent [] GenerateDraggingImageComponents (RectangleF frame, NSView view);
+
+		[Lion, Export ("drawFocusRingMaskWithFrame:inView:")]
+		void DrawFocusRing (RectangleF cellFrameMask, NSView inControlView);
+
+		[Lion, Export ("focusRingMaskBoundsForFrame:inView:")]
+		RectangleF GetFocusRingMaskBounds (RectangleF cellFrame, NSView controlView);
 	}
 
 	[BaseType (typeof (NSImageRep))]
@@ -2580,7 +2685,7 @@ namespace MonoMac.AppKit {
 		void DetachColorList (NSColorList colorList);
 
 		//Detected properties
-		[Export ("accessoryView")]
+		[Export ("accessoryView"), NullAllowed]
 		NSView AccessoryView { get; set; }
 
 		[Export ("continuous")]
@@ -3099,6 +3204,11 @@ namespace MonoMac.AppKit {
 		[Export ("contextualMenuCursor")]
 		NSCursor ContextualMenuCursor { get; }
 
+		[Lion]
+		[Static]
+		[Export ("IBeamCursorForVerticalLayout")]
+		NSCursor IBeamCursorForVerticalLayout { get; }
+		
 		[Export ("initWithImage:hotSpot:")]
 		NSObject InitWithImagehotSpot (NSImage newImage, PointF aPoint);
 
@@ -3328,6 +3438,8 @@ namespace MonoMac.AppKit {
 		[Export ("dockMenu")]
 		NSMenu DockMenu ();
 	}
+
+	public delegate void NSDocumentCompletionHandler (IntPtr nsErrorPointerOrZero);
 	
 	[BaseType (typeof (NSObject))]
 	public interface NSDocument {
@@ -3337,21 +3449,20 @@ namespace MonoMac.AppKit {
 		[Export ("canConcurrentlyReadDocumentsOfType:")]
 		bool CanConcurrentlyReadDocumentsOfType (string typeName);
 
-		// Binding out error
 		[Export ("initWithContentsOfURL:ofType:error:")]
-		IntPtr Constructor (NSUrl absoluteUrl, string typeName, out NSError outError);
+		IntPtr Constructor (NSUrl url, string typeName, out NSError outError);
 
 		[Export ("initForURL:withContentsOfURL:ofType:error:")]
-		IntPtr Constructor (NSUrl absoluteDocumentUrl, NSUrl absoluteDocumentContentsUrl, string typeName, out NSError outError);
+		IntPtr Constructor ([NullAllowed] NSUrl documentUrl, NSUrl documentContentsUrl, string typeName, out NSError outError);
 
 		 [Export ("revertDocumentToSaved:")]
 		 void RevertDocumentToSaved (NSObject sender);
 
 		 [Export ("revertToContentsOfURL:ofType:error:")]
-		 bool RevertToContentsOfUrl (NSUrl absoluteUrl, string typeName, out NSError outError);
+		 bool RevertToContentsOfUrl (NSUrl url, string typeName, out NSError outError);
 
 		[Export ("readFromURL:ofType:error:")]
-		bool ReadFromUrl (NSUrl absoluteUrl, string typeName, out NSError outError);
+		bool ReadFromUrl (NSUrl url, string typeName, out NSError outError);
 
 		[Export ("readFromFileWrapper:ofType:error:")]
 		bool ReadFromFileWrapper (NSFileWrapper fileWrapper, string typeName, out NSError outError);
@@ -3360,7 +3471,7 @@ namespace MonoMac.AppKit {
 		bool ReadFromData (NSData data, string typeName, out NSError outError);
 
 		[Export ("writeToURL:ofType:error:")]
-		bool WriteToUrl (NSUrl absoluteUrl, string typeName, out NSError outError);
+		bool WriteToUrl (NSUrl url, string typeName, out NSError outError);
 
 		[Export ("fileWrapperOfType:error:")]
 		NSFileWrapper GetAsFileWrapper (string typeName, out NSError outError);
@@ -3369,10 +3480,10 @@ namespace MonoMac.AppKit {
 		NSData GetAsData (string typeName, out NSError outError);
 
 		[Export ("writeSafelyToURL:ofType:forSaveOperation:error:")]
-		bool WriteSafelyToUrl (NSUrl absoluteUrl, string typeName, NSSaveOperationType saveOperation, out NSError outError);
+		bool WriteSafelyToUrl (NSUrl url, string typeName, NSSaveOperationType saveOperation, out NSError outError);
 
 		[Export ("writeToURL:ofType:forSaveOperation:originalContentsURL:error:")]
-		bool WriteToUrl (NSUrl absoluteUrl, string typeName, NSSaveOperationType saveOperation, NSUrl absoluteOriginalContentsUrl, out NSError outError);
+		bool WriteToUrl (NSUrl url, string typeName, NSSaveOperationType saveOperation, NSUrl absoluteOriginalContentsUrl, out NSError outError);
 
 		[Export ("fileAttributesToWriteToURL:ofType:forSaveOperation:originalContentsURL:error:")]
 		NSDictionary FileAttributesToWrite (NSUrl toUrl, string typeName, NSSaveOperationType saveOperation, NSUrl absoluteOriginalContentsUrl, out NSError outError);
@@ -3408,10 +3519,10 @@ namespace MonoMac.AppKit {
 		string FileTypeFromLastRunSavePanel { get; }
 
 		[Export ("saveToURL:ofType:forSaveOperation:delegate:didSaveSelector:contextInfo:")]
-		void SaveToUrl (NSUrl absoluteUrl, string typeName, NSSaveOperationType saveOperation, NSObject delegateObject, Selector didSaveSelector, IntPtr contextInfo);
+		void SaveToUrl (NSUrl url, string typeName, NSSaveOperationType saveOperation, NSObject delegateObject, Selector didSaveSelector, IntPtr contextInfo);
 
 		[Export ("saveToURL:ofType:forSaveOperation:error:")]
-		bool SaveToUrl (NSUrl absoluteUrl, string typeName, NSSaveOperationType saveOperation, out NSError outError);
+		bool SaveToUrl (NSUrl url, string typeName, NSSaveOperationType saveOperation, out NSError outError);
 
 		[Export ("hasUnautosavedChanges")]
 		bool HasUnautosavedChanges { get; }
@@ -3544,10 +3655,96 @@ namespace MonoMac.AppKit {
 
 		[Export ("hasUndoManager")]
 		bool HasUndoManager { get; set; }
+
+		[Lion, Export ("performActivityWithSynchronousWaiting:usingBlock:")]
+		void PerformActivity (bool waitSynchronously, NSAction activityCompletionHandler);
+
+		[Lion, Export ("continueActivityUsingBlock:")]
+		void ContinueActivity (NSAction resume);
+
+		[Lion, Export ("continueAsynchronousWorkOnMainThreadUsingBlock:")]
+		void ContinueAsynchronousWorkOnMainThread (NSAction work);
+
+		[Lion, Export ("performSynchronousFileAccessUsingBlock:")]
+		void PerformSynchronousFileAccess (NSAction fileAccessCallback);
+
+		[Lion, Export ("performAsynchronousFileAccessUsingBlock:")]
+		void PerformAsynchronousFileAccess (NSAction ioCode);
+
+		[Lion, Export ("isEntireFileLoaded")]
+		bool IsEntireFileLoaded { get; }
+
+		[Lion, Export ("unblockUserInteraction")]
+		void UnblockUserInteraction ();
+
+		[Lion, Export ("autosavingIsImplicitlyCancellable")]
+		bool AutosavingIsImplicitlyCancellable { get; }
+
+		[Lion, Export ("saveToURL:ofType:forSaveOperation:completionHandler:")]
+		void SaveTo (NSUrl url, string typeName, NSSaveOperationType saveOperation, NSDocumentCompletionHandler completionHandler);
+
+		[Lion, Export ("canAsynchronouslyWriteToURL:ofType:forSaveOperation:")]
+		bool CanWriteAsynchronously (NSUrl toUrl, string typeName, NSSaveOperationType saveOperation);
+
+		[Lion, Export ("checkAutosavingSafetyAndReturnError:")]
+		bool CheckAutosavingSafety (out NSError outError);
+
+		[Lion, Export ("scheduleAutosaving")]
+		void ScheduleAutosaving ();
+
+		[Lion, Export ("autosaveWithImplicitCancellability:completionHandler:")]
+		void Autosave (bool autosavingIsImplicitlyCancellable, NSDocumentCompletionHandler completionHandler);
+
+		[Lion, Export ("autosavesInPlace")]
+		bool AutosavesInPlace ();
+
+		[Static]
+		[Lion, Export ("preservesVersions")]
+		bool PreservesVersions ();
+
+		[Lion, Export ("duplicateDocument:")]
+		void DuplicateDocument (NSObject sender);
+
+		[Lion, Export ("duplicateDocumentWithDelegate:didDuplicateSelector:contextInfo:"), Internal]
+		void _DuplicateDocument ([NullAllowed] NSObject cbackobject, [NullAllowed] Selector didDuplicateSelector, IntPtr contextInfo);
+
+		[Lion, Export ("duplicateAndReturnError:")]
+		NSDocument Duplicate (out NSError outError);
+
+		[Lion, Export ("isInViewingMode")]
+		bool IsInViewingMode { get; }
+
+		[Lion, Export ("changeCountTokenForSaveOperation:")]
+		NSObject ChangeCountToken (NSSaveOperationType saveOperation);
+
+		[Lion, Export ("updateChangeCountWithToken:forSaveOperation:")]
+		void UpdateChangeCount (NSObject changeCountToken, NSSaveOperationType saveOperation);
+
+		[Lion, Export ("willNotPresentError:")]
+		void WillNotPresentError (NSError error);
+
+		[Lion, Export ("setDisplayName:")]
+		void SetDisplayName ([NullAllowed] string displayNameOrNull);
+
+		[Lion, Export ("restoreDocumentWindowWithIdentifier:state:completionHandler:")]
+		void RestoreDocumentWindow (string identifier, NSCoder state, NSWindowCompletionHandler completionHandler);
+
+		[Lion, Export ("encodeRestorableStateWithCoder:")]
+		void EncodeRestorableState (NSCoder coder);
+
+		[Export ("restoreStateWithCoder:")]
+		void RestoreState (NSCoder coder);
+
+		[Export ("invalidateRestorableState")]
+		void InvalidateRestorableState ();
+
+		[Static]
+		[Export ("restorableStateKeyPaths")]
+		string [] RestorableStateKeyPaths ();
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSDocumentController {
+	public interface NSDocumentController : NSWindowRestoration {
 		[Static, Export ("sharedDocumentController")]
 		NSObject SharedDocumentController { get; }
 
@@ -3661,6 +3858,56 @@ namespace MonoMac.AppKit {
 		double AutosavingDelay { get; set; }
 	}
 
+	[Lion]
+	[BaseType (typeof (NSObject))]
+	public interface NSDraggingImageComponent {
+		[Export ("key")]
+		string Key { get; set;  }
+
+		[Export ("contents")]
+		NSObject Contents { get; set;  }
+
+		[Export ("frame")]
+		RectangleF Frame { get; set;  }
+
+		[Static]
+		[Export ("draggingImageComponentWithKey:")]
+		NSDraggingImageComponent FromKey (string key);
+
+		[Export ("initWithKey:")]
+		IntPtr Constructor (string key);
+
+		[Field ("NSDraggingImageComponentIconKey")]
+		NSString IconKey { get; }
+
+		[Field ("NSDraggingImageComponentLabelKey")]
+		NSString LabelKey { get; }
+	}
+
+	delegate NSDraggingImageComponent [] NSDraggingItemImagesContentProvider ();
+	
+	[BaseType (typeof (NSObject))]
+	interface NSDraggingItem {
+		[Export ("item")]
+		NSObject Item { get;  }
+
+		[Export ("draggingFrame")]
+		RectangleF DraggingFrame { get; set;  }
+
+		[Export ("imageComponents")]
+		NSDraggingImageComponent [] ImageComponents { get;  }
+
+		[Export ("initWithPasteboardWriter:")]
+		IntPtr Constructor (NSPasteboardWriting pasteboardWriter);
+
+		[Export ("setImageComponentsProvider:")]
+		void SetImagesContentProvider ([NullAllowed] NSDraggingItemImagesContentProvider provider);
+
+		[Export ("setDraggingFrame:contents:")]
+		void SetDraggingFrame (RectangleF frame, NSObject contents);
+
+	}
+	
 	//NSDraggingInfo is documented as a protocol, but it doesn't work as a protocol.
 	//per the docs: "In Java, sender is an NSDragDestination object, which implements the NSDraggingInfo interface." - from Drag and Drop Programming Topics for Cocoa
 	//furthermore, "you never need to create a class that implements the NSDraggingInfo protocol" from NSDraggingInfo Protocol Reference
@@ -4328,7 +4575,7 @@ namespace MonoMac.AppKit {
 		void ReloadDefaultFontFamilies ();
 
 		//Detected properties
-		[Export ("accessoryView")]
+		[Export ("accessoryView"), NullAllowed]
 		NSView AccessoryView { get; set; }
 
 		[Export ("enabled")]
@@ -5889,7 +6136,7 @@ namespace MonoMac.AppKit {
 		void Draw (RectangleF rect, RectangleF fromRect, NSCompositingOperation op, float delta);
 
 		[Export ("drawInRect:fromRect:operation:fraction:respectFlipped:hints:")]
-		void Draw (RectangleF dstSpacePortionRect, RectangleF srcSpacePortionRect, NSCompositingOperation op, float requestedAlpha, bool respectContextIsFlipped, NSDictionary hints);
+		void Draw (RectangleF dstSpacePortionRect, RectangleF srcSpacePortionRect, NSCompositingOperation op, float requestedAlpha, bool respectContextIsFlipped, [NullAllowed] NSDictionary hints);
 
 		[Export ("drawRepresentation:inRect:")]
 		bool Draw (NSImageRep imageRep, RectangleF rect);
@@ -6018,6 +6265,9 @@ namespace MonoMac.AppKit {
 
 		[Export ("drawInRect:fromRect:operation:fraction:")]
 		void DrawInRect (RectangleF dstRect, RectangleF srcRect, NSCompositingOperation operation, float delta);
+		
+		[Obsolete ("On 10.6 and newer use DrawInRect with respectContextIsFlipped instead"), Export ("flipped")]
+		bool Flipped { [Bind ("isFlipped")] get; set; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -8140,6 +8390,20 @@ namespace MonoMac.AppKit {
 
 		[Export ("menu")]
 		NSMenu Menu { get; set; }
+
+		[Lion, Export ("encodeRestorableStateWithCoder:")]
+		void EncodeRestorableState (NSCoder coder);
+
+		[Lion, Export ("restoreStateWithCoder:")]
+		void RestoreState (NSCoder coder);
+
+		[Lion, Export ("invalidateRestorableState")]
+		void InvalidateRestorableState ();
+
+		[Static]
+		[Lion, Export ("restorableStateKeyPaths")]
+		string [] RestorableStateKeyPaths ();
+		
 	}
 
 
@@ -8256,7 +8520,7 @@ namespace MonoMac.AppKit {
 		[Export ("markers"), NullAllowed]
 		NSRulerMarker [] Markers { get; set; }
 
-		[Export ("accessoryView")]
+		[Export ("accessoryView"), NullAllowed]
 		NSView AccessoryView { get; set; }
 	}
 
@@ -8302,7 +8566,7 @@ namespace MonoMac.AppKit {
 		[Export ("allowsOtherFileTypes")]
 		bool AllowsOtherFileTypes { get; set; }
 
-		[Export ("accessoryView")]
+		[Export ("accessoryView"), NullAllowed]
 		NSView AccessoryView { get; set; }
 
 		[Export ("delegate"), NullAllowed]
@@ -8412,6 +8676,7 @@ namespace MonoMac.AppKit {
 		float ScrollerWidthForControlSize (NSControlSize controlSize);
 
 		[Export ("drawParts")]
+		[Obsolete]
 		void DrawParts ();
 
 		[Export ("rectForPart:")]
@@ -8459,6 +8724,27 @@ namespace MonoMac.AppKit {
 
 		[Export ("knobProportion")]
 		float KnobProportion { get; set; }
+		
+		[Static]
+		[Lion, Export ("isCompatibleWithOverlayScrollers")]
+		bool CompatibleWithOverlayScrollers { get; }
+		
+		[Lion, Export ("knobStyle")]
+		NSScrollerKnobStyle KnobStyle { get; set; }
+		
+		[Static]
+		[Lion, Export ("preferredScrollerStyle")]
+		NSScrollerStyle PreferredScrollerStyle { get; }
+		
+		[Export ("scrollerStyle")]
+		NSScrollerStyle ScrollerStyle { get; set; }
+		
+		[Static]
+		[Lion, Export ("scrollerWidthForControlSize:scrollerStyle:")]
+		float GetScrollerWidth (NSControlSize forControlSize, NSScrollerStyle scrollerStyle);
+		
+		[Field ("NSPreferredScrollerStyleDidChangeNotification")]
+		NSString NSPreferredScrollerStyleDidChangeNotification { get; }
 
 	}
 
@@ -8552,13 +8838,42 @@ namespace MonoMac.AppKit {
 		bool HasHorizontalRuler { get; set; }
 		
 		[Export ("rulersVisible")]
-        bool RulersVisible { get; set; }
-       
-        [Export ("horizontalRulerView")]
-        NSRulerView HorizontalRulerView { get; set; }
-   
-        [Export ("verticalRulerView")]
-        NSRulerView VerticalRulerView { get; set; }    
+		bool RulersVisible { get; set; }
+		
+		[Export ("horizontalRulerView")]
+		NSRulerView HorizontalRulerView { get; set; }
+		
+		[Export ("verticalRulerView")]
+		NSRulerView VerticalRulerView { get; set; }
+
+		[Static]
+		[Lion, Export ("contentSizeForFrameSize:horizontalScrollerClass:verticalScrollerClass:borderType:controlSize:scrollerStyle:")]
+		SizeF GetContentSizeForFrame (SizeF forFrameSize, Class horizontalScrollerClass, Class verticalScrollerClass, NSBorderType borderType, NSControlSize controlSize, NSScrollerStyle scrollerStyle);
+        
+        	[Lion, Export ("findBarPosition")]
+        	NSScrollViewFindBarPosition FindBarPosition { get; set; }
+        
+        	[Lion, Export ("flashScrollers")]
+        	void FlashScrollers ();
+        
+		[Static]
+		[Lion, Export ("frameSizeForContentSize:horizontalScrollerClass:verticalScrollerClass:borderType:controlSize:scrollerStyle")]
+		SizeF GetFrameSizeForContent (SizeF contentSize, Class horizontalScrollerClass, Class verticalScrollerClass, NSBorderType borderType, NSControlSize controlSize, NSScrollerStyle scrollerStyle);
+		
+		[Lion, Export ("horizontalScrollElasticity")]
+		NSScrollElasticity HorizontalScrollElasticity { get; set; }
+        
+        	[Lion, Export ("scrollerKnobStyle")]
+        	NSScrollerKnobStyle ScrollerKnobStyle { get; set; }
+        
+        	[Lion, Export ("scrollerStyle")]
+        	NSScrollerStyle ScrollerStyle { get; set; }
+        
+		[Lion, Export ("usesPredominantAxisScrolling")]
+        	bool UsesPredominantAxisScrolling { get; set; }
+
+		[Lion, Export ("verticalScrollElasticity")]
+		NSScrollElasticity VerticalScrollElasticity { get; set; }
 	}
 
 	[BaseType (typeof (NSTextField))]
@@ -9134,7 +9449,7 @@ namespace MonoMac.AppKit {
 		void UnlearnWord (string word);
 
 		//Detected properties
-		[Export ("accessoryView")]
+		[Export ("accessoryView"), NullAllowed]
 		NSView AccessoryView { get; set; }
 
 		[Export ("substitutionsPanelAccessoryViewController")]
@@ -9467,12 +9782,16 @@ namespace MonoMac.AppKit {
 		void WillRemoveSubview (NSView subview);
 
 		[Export ("removeFromSuperview")]
+		[PreSnippet ("var mySuper = Superview;")]
+		[PostSnippet ("__mt_Superview_var = null;\n\tif (mySuper != null) {\n\t#pragma warning disable 168\n\tvar flush = mySuper.Subviews;\n#pragma warning restore 168\n\t}")]
 		void RemoveFromSuperview ();
 
 		[Export ("replaceSubview:with:")]
 		void ReplaceSubviewWith (NSView oldView, NSView newView);
 
 		[Export ("removeFromSuperviewWithoutNeedingDisplay")]
+		[PreSnippet ("var mySuper = Superview;")]
+		[PostSnippet ("__mt_Superview_var = null;\n\tif (mySuper != null) {\n\t#pragma warning disable 168\n\tvar flush = mySuper.Subviews;\n#pragma warning restore 168\n\t}")]
 		void RemoveFromSuperviewWithoutNeedingDisplay ();
 
 		[Export ("resizeSubviewsWithOldSize:")]
@@ -9944,7 +10263,7 @@ namespace MonoMac.AppKit {
 	[BaseType (typeof (NSResponder))]
 	public interface NSViewController {
 		[Export ("initWithNibName:bundle:")]
-		IntPtr Constructor ([NullAllowed] string nibNameOrNil, [NullAllowed] NSBundle nibBundleOrNil);
+		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 
 		[Export ("loadView")]
 		void LoadView ();
@@ -12914,8 +13233,32 @@ namespace MonoMac.AppKit {
 		[Static, Export ("defaultAnimationForKey:")]
 		NSObject DefaultAnimationFor (NSString key);
 #endregion
+		[Lion, Export ("disableSnapshotRestoration")]
+		void DisableSnapshotRestoration ();
+
+		[Lion, Export ("enableSnapshotRestoration")]
+		void EnableSnapshotRestoration ();
+
+		//Detected properties
+		[Lion, Export ("restorable")]
+		bool Restorable { [Bind ("isRestorable")]get; set; }
+
+		[Lion, Export ("restorationClass")]
+		NSWindowRestoration RestorationClass { get; set; }
 	}
+
+	public delegate void NSWindowCompletionHandler (NSWindow window, NSError error);
 	
+	[BaseType (typeof (NSObject))]
+	[Model]
+	[Lion]
+	public interface NSWindowRestoration {
+		[Static]
+		[Export ("restoreWindowWithIdentifier:state:completionHandler:")]
+		void RestoreWindow (string identifier, NSCoder state, NSWindowCompletionHandler onCompletion);
+
+	}
+
 	[BaseType (typeof (NSResponder))]
 	public interface NSWindowController {
 		[Export ("initWithWindow:")]
@@ -13052,19 +13395,76 @@ namespace MonoMac.AppKit {
 		void DidChangeScreen (NSNotification  notification);
 	
 		[Export ("windowDidChangeScreenProfile:"), EventArgs ("NSNotification")]
-		void DidChangeScreenProfile (NSNotification  notification);
+		void DidChangeScreenProfile (NSNotification notification);
 	
 		[Export ("windowWillBeginSheet:"), EventArgs ("NSNotification")]
-		void WillBeginSheet (NSNotification  notification);
+		void WillBeginSheet (NSNotification notification);
 	
 		[Export ("windowDidEndSheet:"), EventArgs ("NSNotification")]
-		void DidEndSheet (NSNotification  notification);
+		void DidEndSheet (NSNotification notification);
 	
 		[Export ("windowWillStartLiveResize:"), EventArgs ("NSNotification")]
-		void WillStartLiveResize (NSNotification  notification);
+		void WillStartLiveResize (NSNotification notification);
 	
 		[Export ("windowDidEndLiveResize:"), EventArgs ("NSNotification")]
-		void DidEndLiveResize (NSNotification  notification);
+		void DidEndLiveResize (NSNotification notification);
+
+		[Lion, Export ("windowWillEnterFullScreen:"), EventArgs ("NSNotification")]
+		void WillEnterFullScreen (NSNotification notification);
+
+		[Lion, Export ("windowDidEnterFullScreen:"), EventArgs ("NSNotification")]
+		void DidEnterFullScreen (NSNotification notification);
+
+		[Lion, Export ("windowWillExitFullScreen:"), EventArgs ("NSNotification")]
+		void WillExitFullScreen (NSNotification  notification);
+		
+		[Lion, Export ("windowDidExitFullScreen:"), EventArgs ("NSNotification")]
+		void DidExitFullScreen (NSNotification notification);
+
+		[Lion, Export ("windowDidFailToEnterFullScreen:"), EventArgs ("NSWindow")]
+		void DidFailToEnterFullScreen (NSWindow window);
+
+		[Lion, Export ("windowDidFailToExitFullScreen:"), EventArgs ("NSWindow")]
+		void DidFailToExitFullScreen (NSWindow window);
+		
+		[Lion, Export ("window:willUseFullScreenContentSize:"), DelegateName ("NSWindowSize"), DefaultValueFromArgument ("proposedSize")]
+		SizeF WillUseFullScreenContentSize (NSWindow  window, SizeF proposedSize);
+		
+		[Lion, Export ("window:willUseFullScreenPresentationOptions:"), DelegateName ("NSWindowApplicationPresentationOptions"), DefaultValueFromArgument ("proposedOptions")]
+		NSApplicationPresentationOptions WillUseFullScreenPresentationOptions (NSWindow  window, NSApplicationPresentationOptions proposedOptions);
+		
+		[Lion, Export ("customWindowsToEnterFullScreenForWindow:"), DelegateName ("NSWindowWindows"), DefaultValue (null)]
+		NSWindow[] CustomWindowsToEnterFullScreen (NSWindow  window);
+
+		[Lion, Export ("customWindowsToExitFullScreenForWindow:"), DelegateName ("NSWindowWindows"), DefaultValue (null)]
+		NSWindow[] CustomWindowsToExitFullScreen (NSWindow  window);
+
+		[Lion, Export ("window:startCustomAnimationToEnterFullScreenWithDuration:"), EventArgs("NSWindowDuration")]
+		void StartCustomAnimationToEnterFullScreen (NSWindow  window, double duration);
+
+		[Lion, Export ("window:startCustomAnimationToExitFullScreenWithDuration:"), EventArgs("NSWindowDuration")]
+		void StartCustomAnimationToExitFullScreen (NSWindow  window, double duration);
+
+		[Lion, Export ("window:willEncodeRestorableState:"), EventArgs ("NSWindowCoder")]
+		void WillEncodeRestorableState(NSWindow window, NSCoder coder);
+		
+		[Lion, Export ("window:didDecodeRestorableState:"), EventArgs ("NSWindowCoder")]
+		void DidDecodeRestorableState(NSWindow window, NSCoder coder);
+		
+		[Lion, Export ("window:willResizeForVersionBrowserWithMaxPreferredSize:maxAllowedSize:"), DelegateName ("NSWindowSizeSize"), DefaultValueFromArgument ("maxPreferredSize")]
+		SizeF WillResizeForVersionBrowser(NSWindow window, SizeF maxPreferredSize, SizeF maxAllowedSize);
+		
+		[Lion, Export ("windowWillEnterVersionBrowser:"), EventArgs ("NSNotification")]
+		void WillEnterVersionBrowser (NSNotification notification);
+		
+		[Lion, Export ("windowDidEnterVersionBrowser:"), EventArgs ("NSNotification")]
+		void DidEnterVersionBrowser (NSNotification notification);
+		
+		[Lion, Export ("windowWillExitVersionBrowser:"), EventArgs ("NSNotification")]
+		void WillExitVersionBrowser (NSNotification notification);
+		
+		[Lion, Export ("windowDidExitVersionBrowser:"), EventArgs ("NSNotification")]
+		void DidExitVersionBrowser (NSNotification notification);
 	}
 
 	public delegate void NSWorkspaceUrlHandler (NSDictionary newUrls, NSError error);

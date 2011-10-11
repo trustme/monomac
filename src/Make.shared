@@ -39,6 +39,7 @@ SHARED_SOURCE = \
 	./CoreGraphics/CGFunction.cs			\
 	./CoreGraphics/CGPDFArray.cs			\
 	./CoreGraphics/CGPDFStream.cs			\
+	./CoreGraphics/CGPDFString.cs			\
 	./CoreGraphics/CGPDFDictionary.cs		\
 	./CoreGraphics/CGShading.cs			\
 	./CoreImage/CIContext.cs			\
@@ -158,11 +159,13 @@ SHARED_CORE_SOURCE = \
 	./Foundation/NSString.cs			\
 	./Foundation/RegisterAttribute.cs		\
 	./Foundation/PreserveAttribute.cs		\
+        ./ObjCRuntime/AdoptsAttribute.cs               	\
         ./ObjCRuntime/ArgumentSemantic.cs               \
         ./ObjCRuntime/AlphaAttribute.cs                 \
 	./ObjCRuntime/Blocks.cs				\
 	./ObjCRuntime/Dlfcn.cs				\
         ./ObjCRuntime/INativeObject.cs                  \
+	./ObjCRuntime/LionAttribute.cs			\
         ./ObjCRuntime/SinceAttribute.cs                 \
         ./ObjCRuntime/TypeConverter.cs                  \
 	./MonoPInvokeCallbackAttribute.cs
